@@ -1,9 +1,12 @@
 import xml.etree.ElementTree as ET
-import sys
+import os
 
-tree = ET.parse(sys.argv[1])
+file_name = open("Sources\map.osm")
+tree = ET.parse(file_name)
+file_name.close
 root = tree.getroot()
-file_name = sys.argv[1].replace('.xml', '.txt')
+os.rename("Sources\map.osm", "Sources\map.txt")
+file_name = open("Sources\map.txt")
 f=open(file_name, "w")
 for node in root.iter('node'):
     ident = node.attrib['id']
