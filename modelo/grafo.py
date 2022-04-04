@@ -1,30 +1,30 @@
+from asyncore import read
+from importlib.resources import read_text
 from queue import Queue
 from collections import defaultdict
 from vertex import Vertex
+from haversine import haversine, Unit
 
+verticeN = open("..\Sources\map.txt")
+grafoN =  open("..\Sources\uesb.adjlist")
 
 class Graph:
     def __init__(self):
         self.vert_list = {}
 
-    def add_vertex(self, key):
-        novo_vertice = Vertex(key)
+    def add_vertex(self, key, lat, lon):
+        novo_vertice = Vertex(key, lat, lon)
         self.vert_list[key] = novo_vertice
         return novo_vertice
         
     def get_vertex(self, key):
         return self.vert_list[key]
         
-    def add_edge(self, de, para, cost=0):
-        if not de in self.vert_list:
-            v1 = Vertex(de)
-            self.vert_list[de] = v1
-        if not para in self.vert_list:
-            v2 = Vertex(para)
-            self.vert_list[para] = v2
+    def add_edge (self, de, para):
+        peso = haversine(de,para)
         v_de = self.vert_list[de]
         v_para = self.vert_list[para]
-        v_de.add_neighbor(v_para, cost)
+        v_de.add_neighbor(v_para, peso)
             
     def get_vertices(self):
         return self.vert_list.keys()
@@ -50,7 +50,7 @@ class Graph:
         return visited
 
 
-    def dfs(self, start):
+    '''def dfs(self, start):
         visited, stack = list(), [self.get_vertex(start)]
         while stack:
             vertex = stack.pop()
@@ -59,7 +59,7 @@ class Graph:
                 for nbr in vertex.get_connections():
                     if nbr.id not in visited:
                         stack.append(nbr)
-        return visited
+        return visited'''
 
     def dijkstra(self, start, maxD=1e309):
          # total distance from origin
@@ -98,18 +98,10 @@ class Graph:
 
 if __name__ == "__main__":
     g = Graph()
-    # g.add_vertex(1)
-    # g.add_edge(1,2)
-    # g.add_edge(1,1)
-    # g.get_edges()
-    g.add_edge(0, 1, 1)
-    g.add_edge(0, 3, 3)
-    g.add_edge(1, 2, 6)
-    g.add_edge(1, 3, 2)
-    g.add_edge(2, 2, 4)
-    g.add_edge(2, 3, 1)
-    g.add_edge(3, 0, 7)
-    print(g.bfs(0))
-    print(g.dfs(0))
-    print(g.dijkstra(0))
-    print(g.min_path(0,2))
+    for i in verticeN:
+        g.add_vertex(i[0], i[1], i[2])
+    for j in grafoN:
+        for k in j:
+            g.add_edge(k[0], k[1:])
+    
+    

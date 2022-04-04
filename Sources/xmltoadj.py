@@ -1,6 +1,6 @@
 import sys
-from gistfile1 import *
+from Sources.gistfile1 import *
 
-G = read_osm(sys.argv[1])
-networkx.write_adjlist(G, sys.argv[2])
+G = read_osm(download_osm(-122.33,47.60,-122.31,47.61))
+networkx.write_adjlist(G, "uesb.adjlist")
 
