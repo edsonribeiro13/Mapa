@@ -1,5 +1,7 @@
-import sys
 from gistfile1 import *
 
-G = read_osm(sys.argv[1])
-networkx.write_adjlist(G, sys.argv[2])
+file_name = "./Sources/map.osm"
+file_name = open(file_name)
+
+G = read_osm(file_name)
+networkx.write_adjlist(G, "./Sources/uesb.adjlist")
