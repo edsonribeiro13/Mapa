@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import sys
 import re
+import xml_to_points
+import xmltoadj
 #import Sources.gistfile1 as gistfile1
 
-file_name = sys.argv[1]
+file_name = "./map.osm"
 x = list()
 y = list()
 with open(file_name) as fp:

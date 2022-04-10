@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 
-file_name = "./Sources/map.osm"
+file_name = "./map.osm"
 
 tree = ET.parse(file_name)
 root = tree.getroot()
