@@ -1,8 +1,8 @@
 class Vertex:
     def __init__(self, key, lon, lat):
         self.id = key
-        self.lon = lon 
         self.lat = lat
+        self.lon = lon 
         self.connected_to = {}
         
     def add_neighbor(self, nbr, weight=0):
