@@ -1,12 +1,11 @@
-from asyncore import read
-from importlib.resources import read_text
+from asyncio.windows_events import NULL
 from queue import Queue
 from collections import defaultdict
 from vertex import Vertex
-from haversine import haversine, Unit
+from haversine import haversine
 
-verticeN = open("..\Sources\map.txt")
-grafoN =  open("..\Sources\uesb.adjlist")
+verticeN = open("map.osm", encoding = 'cp1252')
+grafoN =  open("uesb.adjlist")
 
 class Graph:
     def __init__(self):
@@ -21,9 +20,13 @@ class Graph:
         return self.vert_list[key]
         
     def add_edge (self, de, para):
-        peso = haversine(de,para)
         v_de = self.vert_list[de]
         v_para = self.vert_list[para]
+        de = g.get_vertex(de)
+        para = g.get_vertex(para)
+        auxDe = Vertex.get_lat_lon(de)
+        auxPara = Vertex.get_lat_lon(para)
+        peso = haversine(auxDe,auxPara)
         v_de.add_neighbor(v_para, peso)
             
     def get_vertices(self):
@@ -94,14 +97,23 @@ class Graph:
             path = None
         return dist, path
    
+g = Graph()
+for i in verticeN:
+    aux = i.split(" ")
+    aux[1] = float(aux[1])
+    aux[2] = aux[2].strip('\n')
+    aux[2] = float(aux[2])
+    g.add_vertex(key = aux[0], lat = aux[1], lon = aux[2])
 
-
-if __name__ == "__main__":
-    g = Graph()
-    for i in verticeN:
-        g.add_vertex(i[0], i[1], i[2])
-    for j in grafoN:
-        for k in j:
-            g.add_edge(k[0], k[1:])
+for j in grafoN:
+    if(j[0] != '#'):
+        k = int(1)
+        aux = j.split(" ")
+        l = len(aux)
+        l -= 1
+        aux[l] = aux[l].strip('\n')
+        while(l >= k):
+            g.add_edge(aux[0], aux[k])
+            k += 1
     
     

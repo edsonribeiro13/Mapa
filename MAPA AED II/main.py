@@ -1,12 +1,10 @@
 from dis import dis
 import matplotlib.pyplot as plt
 import re
-import numpy as np
-from pyparsing import PositionToken
 import xmltoadj
 import xml_to_points
 import haversine as harv
-#import grafo as G
+import grafo as grf
 
 file_name = "./map.osm"
 x = list()

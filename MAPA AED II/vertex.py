@@ -16,3 +16,6 @@ class Vertex:
 
     def get_weight(self, nbr):
         return self.connected_to[nbr]
+    
+    def get_lat_lon(self):
+        return self.lat, self.lon
