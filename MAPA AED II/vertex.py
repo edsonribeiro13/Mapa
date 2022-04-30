@@ -5,7 +5,7 @@ class Vertex:
         self.lon = lon 
         self.connected_to = {}
         
-    def add_neighbor(self, nbr, weight=0):
+    def add_neighbor(self, nbr, weight=0.0):
         self.connected_to[nbr] = weight
 
     def get_connections(self):

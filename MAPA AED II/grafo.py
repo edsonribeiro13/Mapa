@@ -3,6 +3,7 @@ from queue import Queue
 from collections import defaultdict
 from vertex import Vertex
 from haversine import haversine
+import popup
 
 verticeN = open("map.osm", encoding = 'cp1252')
 grafoN =  open("uesb.adjlist")
@@ -20,15 +21,13 @@ class Graph:
         return self.vert_list[key]
         
     def add_edge (self, de, para):
-        v_de = self.vert_list[de]
-        v_para = self.vert_list[para]
-        de = g.get_vertex(de)
-        para = g.get_vertex(para)
+        de = self.vert_list[de]
+        para = self.vert_list[para]
         auxDe = Vertex.get_lat_lon(de)
         auxPara = Vertex.get_lat_lon(para)
         peso = haversine(auxDe,auxPara)
-        v_de.add_neighbor(v_para, peso)
-            
+        Vertex.add_neighbor(de, para, peso)
+
     def get_vertices(self):
         return self.vert_list.keys()
         
@@ -38,31 +37,6 @@ class Graph:
             for vizinho in vertex.connected_to:
                 edges.add((key, vizinho.id, vertex.get_weight(vizinho)))
         return list(edges)
-    
-    def bfs(self, start):
-        queue = Queue()
-        queue.put(self.get_vertex(start))
-        visited = list()
-        while (queue.qsize() > 0):
-            vertex = queue.get()
-            if vertex.id not in visited:
-                visited.append(vertex.id)
-                for nbr in vertex.get_connections():
-                    if nbr.id not in visited:
-                        queue.put(nbr)
-        return visited
-
-
-    '''def dfs(self, start):
-        visited, stack = list(), [self.get_vertex(start)]
-        while stack:
-            vertex = stack.pop()
-            if vertex.id not in visited:
-                visited.append(vertex.id)
-                for nbr in vertex.get_connections():
-                    if nbr.id not in visited:
-                        stack.append(nbr)
-        return visited'''
 
     def dijkstra(self, start, maxD=1e309):
          # total distance from origin
@@ -77,6 +51,7 @@ class Graph:
             min_node = min(current, key=tdist.get)
             unvisited.remove(min_node)
             vertex = self.get_vertex(min_node)
+            #print (Vertex.get_connections(vertex))
             for neighbour in vertex.get_connections():
                 d = tdist[min_node] + vertex.get_weight(neighbour)
                 if tdist[neighbour.id] > d and maxD >= d:
@@ -94,6 +69,7 @@ class Graph:
                 backpath.append(end)
             path = list(reversed(backpath))
         except KeyError:
+            popup.msgErro()
             path = None
         return dist, path
    

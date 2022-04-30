@@ -1,10 +1,11 @@
-from dis import dis
 import matplotlib.pyplot as plt
 import re
 import xmltoadj
 import xml_to_points
-import haversine as harv
+from haversine import haversine
 import grafo as grf
+import vertex as vrt
+import popup
 
 file_name = "./map.osm"
 x = list()
@@ -22,54 +23,58 @@ ax.set_xlim([min(x),max(x)])
 ax.set_ylim([max(y),min(y)])
 
 def onclick(event):
-    print('button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
-          (event.button, event.x, event.y, event.xdata, event.ydata))
     
-    global clique, x, y, x_aux, y_aux, x_aux1, y_aux1
+    global clique, x, y, fig, ax, start
 
     if(control > 0):
         global clique
         if (clique == 0):
-            x_aux = closestPoint(event.xdata, x)
-            y_aux = closestPoint(event.ydata, y)
+            vert = grf.Graph.get_vertices(grf.g)
+            start = closestPoint(event.xdata, event.ydata, vert)
             clique += 1
         elif (clique == 1):
-            x_aux1 = closestPoint(event.xdata, x)
-            y_aux1 = closestPoint(event.ydata, y)
-            plt.plot(x[int(x_aux):int(x_aux1)], y[int(y_aux):int(y_aux1)], 'ro')
-            fig.canvas.draw()
+            vert = grf.Graph.get_vertices(grf.g)
+            end = closestPoint(event.xdata, event.ydata, vert)
+            self = grf.g  
+            valor,caminho = grf.Graph.min_path(self = self, start = start,end = end)
+            if caminho != None: 
+                for i in caminho:
+                    aux = grf.Graph.get_vertex(grf.g, i)
+                    xPlot, yPlot = vrt.Vertex.get_lat_lon(aux)
+                    plt.plot(yPlot, xPlot,marker = 'o')
+                popup.msgDistancia(valor)    
+                plt.draw()
+                fig.canvas.draw()
             clique += 1
-            print("TESTE 1")
+            popup.msgLimpar()
         elif (clique == 2):
-            plt.clf()
-            fig.canvas.draw()
             clique = int(0)
-            print("TESTE 2")
 
-def closestPoint(node, nodes):
-    ponto = nodes[0]
-    difAtual = int(0)
-    if((nodes[0] - node) < 0):
-        difPos = (nodes[0] - node) * (-1)
-    else:
-        difPos = nodes[0] - node
-    for dist in nodes:
-        difAtual = dist - node
-        if(difAtual < 0):
-            difAtual *= -1
-        if(difAtual < difPos):
-            ponto = dist
+
+def closestPoint(nodeX, nodeY, vert):
+    difAtual = float(0)
+    difPos = float(0)
+    for i in vert:
+        vertAux2 = i
+        vertAux = grf.Graph.get_vertex(grf.g, i)
+        latV,lonV = vrt.Vertex.get_lat_lon(vertAux)
+        latlon = latV,lonV
+        eventNodes = nodeY,nodeX
+        difAtual = haversine(eventNodes,latlon)
+        if(difAtual < difPos or difPos == 0):
+            ponto = vertAux2
             difPos = difAtual
     return ponto
 
-#plt.plot(x, y, 'ro')
+plt.plot(x, y, 'ro')
 cid = fig.canvas.mpl_connect('button_press_event', onclick)
 control = int(0)
 clique = int(0)
-x_aux = int(0)
-y_aux = int(0) 
-x_aux1 = int(0)
-y_aux1 = int(0) 
+x_aux = float(0)
+y_aux = float(0) 
+x_aux1 = float(0)
+y_aux1 = float(0) 
+start = vrt.Vertex
 control += 1
 plt.show()
 
