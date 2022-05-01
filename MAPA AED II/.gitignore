@@ -1,2 +1,3 @@
 *.pyc
 *.adjlist
+/__pycache__/
