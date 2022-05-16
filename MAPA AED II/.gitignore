@@ -1,3 +1,4 @@
 *.pyc
 *.adjlist
 /__pycache__/
+/.vscode/

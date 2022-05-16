@@ -1,7 +1,7 @@
 from gistfile1 import *
 
 file_name = "./map.osm"
-file_name = open(file_name)
+file_name = open(file_name, encoding = 'utf-8')
 
 G = read_osm(file_name)
 networkx.write_adjlist(G, "uesb.adjlist")
