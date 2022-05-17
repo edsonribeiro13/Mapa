@@ -66,7 +66,7 @@ def closestPoint(nodeX, nodeY, vert):
             difPos = difAtual
     return ponto
 
-plt.plot(x, y, 'ro')
+plt.plot(x, y, '1-.r', markersize=3)
 cid = fig.canvas.mpl_connect('button_press_event', onclick)
 control = int(0)
 clique = int(0)
@@ -74,7 +74,6 @@ x_aux = float(0)
 y_aux = float(0) 
 x_aux1 = float(0)
 y_aux1 = float(0) 
-start = vrt.Vertex
 control += 1
 plt.show()
 
