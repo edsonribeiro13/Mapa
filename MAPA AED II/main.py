@@ -37,17 +37,18 @@ def onclick(event):
             end = closestPoint(event.xdata, event.ydata, vert)
             self = grf.g  
             valor,caminho = grf.Graph.min_path(self = self, start = start,end = end)
-            if caminho != None: 
+            if caminho != None:
                 for i in caminho:
                     aux = grf.Graph.get_vertex(grf.g, i)
                     xPlot, yPlot = vrt.Vertex.get_lat_lon(aux)
-                    plt.plot(yPlot, xPlot,marker = 'o')
-                popup.msgDistancia(valor)    
+                    plt.plot(yPlot, xPlot,'H-k')
+                popup.msgDistancia(f"{round(valor,2)} KM's")    
                 plt.draw()
                 fig.canvas.draw()
             clique += 1
             popup.msgLimpar()
         elif (clique == 2):
+            plotar()
             clique = int(0)
 
 
@@ -66,7 +67,12 @@ def closestPoint(nodeX, nodeY, vert):
             difPos = difAtual
     return ponto
 
-plt.plot(x, y, '1-.r', markersize=3)
+def plotar():
+    plt.clf()
+    plt.plot(x, y, 'or')
+    plt.draw()
+
+plotar()
 cid = fig.canvas.mpl_connect('button_press_event', onclick)
 control = int(0)
 clique = int(0)
@@ -76,6 +82,3 @@ x_aux1 = float(0)
 y_aux1 = float(0) 
 control += 1
 plt.show()
-
-'''plt.clf() - Limpa tudo da tela, tu pode replotar pra aparecer os pontos sem ligações
-plt.draw() - Serve pra "Pintar" as ligações, tipo o repaint do java'''
